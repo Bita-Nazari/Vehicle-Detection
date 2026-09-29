@@ -6,7 +6,7 @@ This project focuses on **vehicle image classification**, with the objective of 
 
 The dataset contains:
 
-* **3,330 training images**
+* **3,331 training images**
 * **400 test images**
 * **8 vehicle classes**
 
@@ -71,14 +71,16 @@ These images included:
 * 6 duplicate images from the `ambulance` class
 * 2 duplicate images from the `minibus` class
 
-test/ambulance/200396165.jpg', train/ambulance/200396165.jpg',
-test/ambulance/214830125.jpg', train/ambulance/214830125.jpg',
-test/ambulance/215713763.jpg', train/ambulance/215713763.jpg', 
-test/ambulance/216095686.jpg', train/ambulance/216095686.jpg',
-test/ambulance/217040489.jpg', train/ambulance/217040489.jpg',
-test/ambulance/218089422.jpg', train/ambulance/218089422.jpg',
-test/minibus/218138154.jpg'  , train/minibus/218138154.jpg',
+```text
+test/ambulance/200396165.jpg', train/ambulance/200396165.jpg'
+test/ambulance/214830125.jpg', train/ambulance/214830125.jpg'
+test/ambulance/215713763.jpg', train/ambulance/215713763.jpg' 
+test/ambulance/216095686.jpg', train/ambulance/216095686.jpg'
+test/ambulance/217040489.jpg', train/ambulance/217040489.jpg'
+test/ambulance/218089422.jpg', train/ambulance/218089422.jpg'
+test/minibus/218138154.jpg'  , train/minibus/218138154.jpg'
 test/minibus/218307381.jpg'  , train/minibus/218307381.jpg'
+```
 
 This issue is particularly important because having identical images in both the training and test sets can lead to **data leakage**. In such cases, the model may encounter the exact same images during training and evaluation, resulting in an overly optimistic estimate of its generalization performance.
 
@@ -88,7 +90,7 @@ Therefore, the **train-test duplicate images should be removed from the appropri
 
 ## 1.5 Class Distribution
 
-The distribution of images across the eight training classes was analyzed to identify potential class imbalance.
+The distribution of images across the eight training classes was analyzed to identify potential class imbalance , before deleting duplicates.
 
 | Class     | Number of Images | Percentage |
 | --------- | ---------------: | ---------: |
@@ -100,6 +102,8 @@ The distribution of images across the eight training classes was analyzed to ide
 | Savari    |              500 |     15.01% |
 | Taxi      |              488 |     14.65% |
 | Vanet     |              151 |      4.53% |
+
+
 
 The `vanet` class has the lowest number of samples, with **151 images (4.53%)**, while the `savari` class has the highest number of samples, with **500 images (15.01%)**.
 
@@ -132,6 +136,10 @@ The most frequent image dimensions were:
 | 171 × 228  |               44 |
 | 210 × 276  |               41 |
 | 189 × 240  |               41 |
+
+
+
+
 
 Other image dimensions were also present with lower frequencies.
 
@@ -171,3 +179,70 @@ The initial data inspection revealed the following:
 * Random visual inspection was performed using eight samples from each class.
 
 Based on these findings, the main data preparation steps before model training are to **remove train-test duplicates, resolve the identified duplicate/label conflict, standardize image dimensions, and consider the class imbalance during model development and evaluation**.
+
+
+# 2. Data Cleaning
+
+After completing the initial data inspection, the identified duplicate images were removed to prevent data leakage and label conflicts.
+
+The following cleaning steps were performed:
+
+* The duplicate image within the training dataset was removed from the `vanet` class.
+* The **8 train-test duplicate images** were removed from the training dataset.
+* No corrupted images were found, so no files were removed for corruption.
+
+As a result, the dataset was cleaned while keeping the test set unchanged.
+
+## 2.1 Dataset OverView After Cleaning
+
+After deleting duplicates 
+
+* **3,330 training images**
+* **392 test images**
+* **8 vehicle classes**
+
+## 2.2 Class Distribution After Cleaning
+
+after deleting duplicates:
+
+| Class     | Number of Images | Percentage |
+| --------- | ---------------: | ---------: |
+| Ambulance |              358 |     10.75% |
+| Autobus   |              470 |     14.11% |
+| Kamyun    |              496 |     14.89% |
+| Kamyunet  |              455 |     13.66% |
+| Minibus   |              413 |     12.40% |
+| Savari    |              500 |     15.02% |
+| Taxi      |              488 |     14.65% |
+| Vanet     |              150 |      4.50% |
+
+## 2.3 Image Size Distribution After Cleaning
+
+The image dimensions were analyzed again after removing the duplicate images. The most common image sizes before and after cleaning are shown below.
+
+| Image Size | Before Cleaning | After Cleaning |
+| ---------- | --------------: | -------------: |
+| 198 × 264  |             122 |            122 |
+| 189 × 252  |             107 |            107 |
+| 186 × 252  |              99 |             99 |
+| 177 × 240  |              68 |             68 |
+| 198 × 252  |              67 |             67 |
+| 207 × 276  |              56 |             56 |
+| 180 × 240  |              54 |             54 |
+| 171 × 228  |              44 |             44 |
+| 210 × 276  |              41 |             41 |
+| 189 × 240  |              41 |             41 |
+| 195 × 264  |              38 |             38 |
+| 162 × 216  |              34 |             34 |
+| 156 × 204  |              32 |             32 |
+| 186 × 240  |              32 |             32 |
+| 180 × 228  |              28 |             28 |
+| 177 × 228  |              24 |             23 |
+| 195 × 252  |              22 |             22 |
+| 165 × 216  |              18 |             18 |
+| 150 × 192  |              17 |             17 |
+| 171 × 216  |              14 |             14 |
+
+The comparison shows that removing the duplicate images had a minimal effect on the overall image-size distribution. Only one of the listed image sizes decreased in frequency, from **24 to 23 images**, while the other common image sizes remained unchanged.
+
+Since the images have different spatial dimensions, image resizing will be applied during the preprocessing stage to ensure that all images have a consistent input size for the CNN models.
