@@ -4,9 +4,9 @@ from torch.utils.data import Subset
 from pathlib import Path
 from torch.utils.data import DataLoader
 
-
-train_path = Path("data/train")
-test_path = Path("data/test")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+train_path = PROJECT_ROOT / "data" / "train"
+test_path = PROJECT_ROOT / "data" / "test"
 
 
 transform = transforms.Compose([
